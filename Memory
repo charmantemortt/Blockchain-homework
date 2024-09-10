@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Memory{
+  mapping (address => uint) public payments;
+  address public myAddr = 0x1aE0EA34a72D944a8C7603FfB3eC30a6669E454C;
+
+  function receiveFunds () public payable{
+    payments[msg.sender] += msg.value;
+  }
+
+   
+  function transferTo(address payable targetAddr, uint amount) public{
+    require(payments[msg.sender] >= amount, "Insufficient funds");
+    payments[msg.sender] -= amount;
+    targetAddr.transfer(amount);
+  }
+
+  function getBalance(address targetAddr) public view returns(uint){
+    return targetAddr.balance;
+  }
+}
