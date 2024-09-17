@@ -1,0 +1,52 @@
+// SPDX-License-Identifier: MIT  
+   
+pragma solidity ^0.8.0; 
+ 
+abstract contract Account{ 
+    string public role; 
+ 
+    function getRole(string memory _role) public returns(string memory){
+        role=_role;
+        return role;
+    } 
+
+    function performAction() public virtual returns(string memory){
+    }
+} 
+ 
+contract UserAccount is Account{ 
+    function performAction() public pure override returns(string memory){
+        return "User performing action";
+    }
+}
+
+contract AdminAccount is Account{
+    function performAction() public pure override returns(string memory){
+        return "Admin performing action";
+    }
+}
+
+interface IDeliveryProvider{
+    function calculateDeliveryCost(uint distance) external view returns(uint);
+    function deliverGoods(uint distance) external view returns(uint);
+}
+
+contract FastDelivery is IDeliveryProvider{
+    function calculateDeliveryCost(uint distance) external pure override returns(uint){
+        return distance * 5;
+    }
+
+    function deliverGoods(uint distance) external pure override returns(uint){
+        return distance;
+    }
+}
+
+contract EconomyDelivery is IDeliveryProvider{
+    function calculateDeliveryCost(uint distance) external pure override(IDeliveryProvider) returns(uint){
+        return distance * 2;
+    }
+
+    function deliverGoods(uint distance) external pure override(IDeliveryProvider) returns(uint){
+        return distance;
+    }
+}
